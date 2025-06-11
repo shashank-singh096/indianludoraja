@@ -1,8 +1,7 @@
 console.log("IndianLudoRaja frontend loaded");
 
-const socket = io("https://indianludoraja.onrender.com"); // Render backend ka URL
+const socket = io("https://indianludoraja.onrender.com");
 
-// Room banane ka logic
 function createRoom() {
   const room = prompt("Enter Room Name:");
   if (room) {
@@ -10,7 +9,6 @@ function createRoom() {
   }
 }
 
-// Room join karne ka logic
 function joinRoom() {
   const room = prompt("Enter Room Name to Join:");
   if (room) {
@@ -18,14 +16,7 @@ function joinRoom() {
   }
 }
 
-// Server se message receive
 socket.on("message", (msg) => {
   console.log("Server:", msg);
-  alert(msg); // test alert
+  document.getElementById("game").innerHTML = `<p>${msg}</p>`;
 });
-
-// Buttons add karne ke liye
-document.body.innerHTML += `
-  <button onclick="createRoom()">Create Room</button>
-  <button onclick="joinRoom()">Join Room</button>
-`;
