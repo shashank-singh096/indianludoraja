@@ -1,8 +1,82 @@
-body{font-family:system-ui,sans-serif;text-align:center;background:#fffbe5;margin:0}
-#lobby{padding:30px}
-#game{padding:10px}
-.hide{display:none}
-canvas{background:#fff;border:6px solid #444;max-width:95vw;height:auto}
-button{padding:8px 20px;margin:4px;font-size:16px;border-radius:6px;border:1px solid #333;cursor:pointer}
-#diceVal{font-size:24px;font-weight:700;margin-left:10px}
-#info{font-weight:600;margin:6px}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ffefba, #ffffff);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #333;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #d32f2f;
+  margin-top: 40px;
+  text-shadow: 1px 1px 1px #888;
+}
+
+.container {
+  margin-top: 30px;
+  background: #ffffffcc;
+  padding: 20px 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  text-align: center;
+  width: 90%;
+  max-width: 500px;
+}
+
+input[type="text"] {
+  padding: 10px;
+  width: 80%;
+  font-size: 1rem;
+  margin: 10px 0;
+  border: 2px solid #d32f2f;
+  border-radius: 12px;
+  outline: none;
+}
+
+button {
+  background: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  margin: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: #b71c1c;
+}
+
+.message-box {
+  margin-top: 20px;
+  background: #fbe9e7;
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  color: #5d4037;
+}
+
+.rolling-area {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.dice-roll {
+  font-size: 3rem;
+  margin-top: 10px;
+}
+
+.footer {
+  margin-top: auto;
+  padding: 15px;
+  font-size: 0.9rem;
+  color: #888;
+}
