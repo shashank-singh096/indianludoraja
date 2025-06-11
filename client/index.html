@@ -2,32 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Indian Ludo Raja 👑</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" defer></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
 </head>
 <body>
   <h1>Indian Ludo Raja 👑</h1>
 
-  <div class="container">
-    <div>
-      <input type="text" id="roomInput" placeholder="Enter Room Code" />
+  <div id="loginPanel" class="card">
+    <input id="playerName" placeholder="Enter your name" />
+    <button onclick="login()">Start</button>
+  </div>
+
+  <div id="lobbyPanel" class="card hidden">
+    <h2>Lobby</h2>
+    <button onclick="quickMatch()">Quick Match ⚡</button>
+    <div class="room-box">
+      <input id="roomInput" placeholder="Room Code" />
+      <button onclick="createRoom()">Create</button>
+      <button onclick="joinRoom()">Join</button>
     </div>
-    <div>
-      <button onclick="createRoom()">Create Room</button>
-      <button onclick="joinRoom()">Join Room</button>
+    <div id="shareBox" class="hidden">
+      <p>Invite your friend:</p>
+      <input id="shareLink" readonly />
+      <button onclick="copyLink()">📋 Copy Link</button>
     </div>
-    <div class="message-box" id="messageBox">Welcome to Indian Ludo Raja<br>Game is loading...</div>
-    
-    <div class="rolling-area" id="gameArea" style="display:none;">
-      <p id="turnMsg">Opponent's turn</p>
-      <button onclick="rollDice()">🎲 Roll</button>
-      <div class="dice-roll" id="diceValue"></div>
+    <p id="statusBox"></p>
+  </div>
+
+  <div id="gamePanel" class="card hidden">
+    <h2 id="roomTitle"></h2>
+    <p id="turnInfo">Opponent's turn</p>
+    <button id="rollBtn" onclick="rollDice()" disabled>🎲 Roll</button>
+    <p id="diceRes"></p>
+    <p>Coins: <span id="coinCount">0</span> | Level: <span id="lvl">1</span></p>
+    <button id="startVoice" class="hidden" onclick="startVoiceChat()">🎙 Start Voice Chat</button>
+  </div>
+
+  <div id="chatPanel" class="card hidden">
+    <h3>Chat 💬</h3>
+    <div id="messages"></div>
+    <div class="chat-input">
+      <input id="msgInput" placeholder="Type a message…" />
+      <emoji-picker id="picker"></emoji-picker>
+      <button onclick="sendMsg()">➤</button>
     </div>
   </div>
 
-  <div class="footer">© 2025 Indian Ludo Raja. Built with ❤️ by Shashank Singh.</div>
+  <div id="leaderboardPanel" class="card hidden">
+    <h3>Weekly Leaderboard 🏅</h3>
+    <ol id="weeklyBoard"></ol>
+    <h3>Monthly Leaderboard 🏆</h3>
+    <ol id="monthlyBoard"></ol>
+    <h3>Yearly Leaderboard 👑</h3>
+    <ol id="yearlyBoard"></ol>
+  </div>
 
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
