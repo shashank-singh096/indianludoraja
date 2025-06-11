@@ -2,31 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Indian Ludo Raja</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <h1>Indian Ludo Raja 👑</h1>
 
-  <div id="lobby">
-    <input id="room" placeholder="Room ID" />
-    <button onclick="createRoom()">Create Room</button>
-    <button onclick="joinRoom()">Join Room</button>
+  <section id="lobby">
+    <input id="room" placeholder="Room ID"/>
+    <button onclick="createRoom()">Create</button>
+    <button onclick="joinRoom()">Join</button>
     <p id="lobbyMsg"></p>
-  </div>
+  </section>
 
-  <div id="game" class="hidden">
-    <canvas id="board" width="600" height="600"></canvas>
+  <section id="game" class="hide">
+    <canvas id="board" width="640" height="640"></canvas>
     <div id="ui">
       <div id="info"></div>
-      <button id="diceBtn" onclick="rollDice()">🎲 Roll</button>
-      <div id="diceVal"></div>
-      <button id="againBtn" class="hidden" onclick="playAgain()">Play again</button>
+      <button id="diceBtn" onclick="rollDice()">🎲 Roll</button>
+      <span id="diceVal"></span>
+      <button id="againBtn" class="hide" onclick="playAgain()">Play Again</button>
     </div>
-  </div>
+  </section>
 
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
+
