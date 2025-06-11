@@ -1,15 +1,12 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: system-ui, sans-serif;
   text-align: center;
-  background-color: #fef2d1;
+  background:#fffbef;
 }
+#board {background:#fff;border:5px solid #333;margin-top:10px}
+#ui {margin:10px}
+button {padding:8px 18px;margin:4px;font-size:16px}
+.hidden{display:none}
+#diceVal{font-size:24px;font-weight:bold;margin:6px}
+#info{font-weight:bold;margin:6px}
 
-#gameArea {
-  margin-top: 50px;
-}
-
-button {
-  margin: 5px;
-  padding: 10px 20px;
-  font-size: 16px;
-}
