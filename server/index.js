@@ -7,6 +7,7 @@ const app = express();
 app.use(cors());
 
 const server = http.createServer(app);
+
 const io = new Server(server, {
   cors: {
     origin: "*"
@@ -19,13 +20,13 @@ io.on("connection", (socket) => {
   socket.on("createRoom", (room) => {
     socket.join(room);
     console.log(`Room created: ${room}`);
-    socket.emit("message", `Room '${room}' created successfully.`);
+    socket.emit("message", `Room '${room}' created. Waiting for another player...`);
   });
 
   socket.on("joinRoom", (room) => {
     socket.join(room);
     console.log(`User joined room: ${room}`);
-    socket.emit("message", `Joined room '${room}'`);
+    io.to(room).emit("message", `Both players joined Room '${room}'. Game will start!`);
   });
 });
 
