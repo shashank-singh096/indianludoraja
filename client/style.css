@@ -48,3 +48,82 @@
 .mode-buttons button:hover {
   background-color: #0056b3;
 }
+.game-body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.board-container {
+  width: 90vmin;
+  height: 90vmin;
+  display: grid;
+  grid-template-areas:
+    "red red center green green"
+    "red red center green green"
+    "center center center center center"
+    "yellow yellow center blue blue"
+    "yellow yellow center blue blue";
+  gap: 5px;
+}
+
+.ludo-board {
+  display: contents;
+}
+
+.home {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.token {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: white;
+  border: 3px solid black;
+}
+
+.red-home    { grid-area: red;    background: #f66; }
+.green-home  { grid-area: green;  background: #6f6; }
+.yellow-home { grid-area: yellow; background: #ff6; }
+.blue-home   { grid-area: blue;   background: #66f; }
+
+.center-area {
+  grid-area: center;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+}
+
+#dice {
+  font-size: 40px;
+  cursor: pointer;
+  margin: 10px 0;
+  transition: transform 0.3s ease;
+}
+
+#dice:hover {
+  transform: scale(1.1);
+}
+
+#current-turn, #dice-result {
+  font-size: 18px;
+  font-weight: bold;
+}
+
