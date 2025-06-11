@@ -1,31 +1,35 @@
 const express = require("express");
-const http = require("http");
-const socketIo = require("socket.io");
 const cors = require("cors");
+const http = require("http");
+const { Server } = require("socket.io");
 
 const app = express();
 app.use(cors());
 
 const server = http.createServer(app);
-const io = socketIo(server, {
+const io = new Server(server, {
   cors: {
     origin: "*"
   }
 });
 
-// Basic test socket event
 io.on("connection", (socket) => {
-  console.log("New user connected:", socket.id);
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
-});
+  console.log("User connected:", socket.id);
 
-app.get("/", (req, res) => {
-  res.send("Indian Ludo Raja backend is running!");
+  socket.on("createRoom", (room) => {
+    socket.join(room);
+    console.log(`Room created: ${room}`);
+    socket.emit("message", `Room '${room}' created successfully.`);
+  });
+
+  socket.on("joinRoom", (room) => {
+    socket.join(room);
+    console.log(`User joined room: ${room}`);
+    socket.emit("message", `Joined room '${room}'`);
+  });
 });
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
