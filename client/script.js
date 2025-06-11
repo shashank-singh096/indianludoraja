@@ -1,134 +1,98 @@
-// ----- socket setup -----
-const socket = io("https://indianludoraja.onrender.com"); // <— your Render URL
-let playerColor = null;        // 'red' or 'yellow'
-let myTurn = false;
-let currentDice = 0;
-let roomId = "";
+/* --- CONFIG ------------------------------------------------------------ */
+const SERVER = "https://indianludoraja.onrender.com"; // <- Render URL
+/* ---------------------------------------------------------------------- */
 
-const COLORS = { red: "#e74c3c", yellow: "#f1c40f" };
-const TOKEN_RADIUS = 15;
+const socket = io(SERVER);
+const COLORS = ["red","yellow","green","blue"];
+const HEX = {red:"#e74c3c",yellow:"#f1c40f",green:"#2ecc71",blue:"#3498db"};
+const START_POS = {red:0,yellow:13,green:26,blue:39}; // starting tile index
+const HOME_POS = 57;                                   // simple finish
 
-// board path (0‑57) simplified — array of [x,y] tile centres on 15x15 canvas grid
-const path = [];
-(function buildPath() {
-  const grid = 40;            // each square 40×40 px
-  const baseX = 7, baseY = 13; // start for red
-  // Straight line demo path round the board
-  for (let i = 0; i < 58; i++) {
-    const x = (i % 15);
-    const y = Math.floor(i / 15);
-    path.push([grid * (x + 1), grid * (y + 1)]);
+let roomId="", myColor="", turn="red", dice=0, tokens={}, myTurn=false;
+
+const ctx = document.getElementById("board").getContext("2d");
+
+/* --- SIMPLE PATH (58 tiles in clockwise line) ------------------------- */
+const path=[]; (function(){
+  const g=40; for(let i=0;i<58;i++){
+    const x=(i%14)+1, y=Math.floor(i/14)+1;
+    path.push([g*x,g*y]);
   }
 })();
 
-let tokens = { red: 0, yellow: 0 }; // position index per colour
+/* --- DOM HELPERS ------------------------------------------------------ */
+const $=id=>document.getElementById(id);
+function show(el){el.classList.remove("hide")}
+function hide(el){el.classList.add("hide")}
 
-// ----- DOM shortcuts -----
-const $ = (id) => document.getElementById(id);
-const ctx = $("board").getContext("2d");
+/* --- LOBBY ------------------------------------------------------------ */
+function createRoom(){ roomId=$("room").value||rand(); socket.emit("createRoom",roomId); }
+function joinRoom(){ roomId=$("room").value; if(roomId) socket.emit("joinRoom",roomId); }
+function rand(){return Math.floor(10000+Math.random()*90000).toString();}
 
-// -------------- Lobby ----------------
-function createRoom() {
-  roomId = $("room").value || Math.floor(10000 + Math.random() * 90000).toString();
-  socket.emit("createRoom", roomId);
-}
-function joinRoom() {
-  roomId = $("room").value;
-  if (!roomId) return alert("Enter a room ID first");
-  socket.emit("joinRoom", roomId);
-}
+/* --- GAME FLOW -------------------------------------------------------- */
+function rollDice(){ if(myTurn) socket.emit("roll",roomId); }
+function playAgain(){ socket.emit("reset",roomId); }
 
-// -------------- Game flow ------------
-$("board").addEventListener("click", () => {
-  if (!myTurn || currentDice === 0) return;
-  moveToken(playerColor);
-  socket.emit("move", { roomId, color: playerColor, pos: tokens[playerColor] });
+document.getElementById("board").addEventListener("click",e=>{
+  if(!myTurn||dice===0)return;
+  const [mx,my]=[e.offsetX,e.offsetY];
+  tokens[myColor].forEach((p,idx)=>{
+    const [x,y]=p===-1?[40,40]:path[p];
+    if(Math.hypot(mx-x,my-y)<18) socket.emit("move",{roomId,color:myColor,idx});
+  });
 });
 
-function rollDice() {
-  if (!myTurn) return;
-  socket.emit("roll", roomId);
-}
-
-function moveToken(col) {
-  tokens[col] = Math.min(tokens[col] + currentDice, 57);
-  currentDice = 0;
-  myTurn = false;
-  drawBoard();
-  socket.emit("endTurn", roomId);
-  checkWin();
-}
-
-function playAgain() {
-  socket.emit("reset", roomId);
-}
-
-// -------------- Drawing --------------
-function drawBoard() {
-  ctx.clearRect(0, 0, 600, 600);
-  // tiles
-  ctx.strokeStyle = "#ccc";
-  for (let i = 0; i < 15; i++) {
+/* --- DRAWING ---------------------------------------------------------- */
+function draw(){
+  ctx.clearRect(0,0,640,640);
+  /* board grid */
+  ctx.strokeStyle="#ddd";
+  for(let i=1;i<=14;i++){
     ctx.beginPath();
-    ctx.moveTo(40, 40 + i * 40);
-    ctx.lineTo(600 - 40, 40 + i * 40);
-    ctx.moveTo(40 + i * 40, 40);
-    ctx.lineTo(40 + i * 40, 600 - 40);
+    ctx.moveTo(40,40*i); ctx.lineTo(600,40*i);
+    ctx.moveTo(40*i,40); ctx.lineTo(40*i,600);
     ctx.stroke();
   }
-  // tokens
-  Object.entries(tokens).forEach(([col, pos]) => {
-    const [x, y] = path[pos];
-    ctx.fillStyle = COLORS[col];
-    ctx.beginPath();
-    ctx.arc(x, y, TOKEN_RADIUS, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#000";
-    ctx.stroke();
+  /* tokens */
+  Object.entries(tokens).forEach(([c,arr])=>{
+    ctx.fillStyle=HEX[c];
+    arr.forEach(p=>{
+      const [x,y]=p===-1 ? startXY(c) : path[p];
+      ctx.beginPath(); ctx.arc(x,y,15,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    });
   });
 }
 
-// -------------- Socket events --------
-socket.on("roomJoined", ({ color, message }) => {
-  playerColor = color;
-  $("lobbyMsg").innerText = message;
-});
-socket.on("gameStart", ({ turn }) => {
-  $("lobby").classList.add("hidden");
-  $("game").classList.remove("hidden");
-  $("info").innerText = "";
-  tokens = { red: 0, yellow: 0 };
-  drawBoard();
-  setTurn(turn);
-});
-socket.on("diceResult", ({ value, turn }) => {
-  $("diceVal").innerText = value;
-  currentDice = value;
-  setTurn(turn);
-});
-socket.on("moveUpdate", ({ tokens: tkns }) => {
-  tokens = tkns;
-  drawBoard();
-});
-socket.on("turnUpdate", (turn) => setTurn(turn));
-socket.on("win", (winner) => {
-  $("info").innerText = (winner === playerColor) ? "🎉 You Win!" : "You Lose!";
-  $("againBtn").classList.remove("hidden");
-});
-socket.on("resetGame", ({ turn }) => {
-  tokens = { red: 0, yellow: 0 };
-  $("againBtn").classList.add("hidden");
-  $("diceVal").innerText = "";
-  $("info").innerText = "";
-  drawBoard();
-  setTurn(turn);
-});
-
-function setTurn(turnColor) {
-  myTurn = turnColor === playerColor;
-  $("diceBtn").disabled = !myTurn;
-  $("info").innerText = myTurn ? "Your turn" : "Opponent's turn";
+function startXY(c){
+  const map={red:[40,40],yellow:[600,40],green:[600,600],blue:[40,600]};
+  return map[c];
 }
 
-drawBoard();
+/* --- SOCKET EVENTS ---------------------------------------------------- */
+socket.on("roomJoined",({color,msg})=>{
+  myColor=color; $("lobbyMsg").innerText=msg;
+});
+socket.on("gameStart",state=>{
+  hide($("lobby")); show($("game"));
+  initState(state);
+});
+socket.on("state",initState);
+
+function initState(state){
+  ({tokens,turn,dice}=state); draw();
+  myTurn=turn===myColor;
+  $("diceBtn").disabled=!myTurn;
+  $("info").innerText=myTurn?"Your turn":"Opponent's turn";
+  $("diceVal").innerText=dice||"";
+  if(state.winner){
+    $("info").innerText = state.winner===myColor?"🎉 You Win!":"You Lose!";
+    show($("againBtn"));
+  }else hide($("againBtn"));
+}
+
+/* --- INITIAL ---------------------------------------------------------- */
+tokens = COLORS.reduce((obj,c)=>(obj[c]=new Array(4).fill(-1),obj),{});
+draw();
+
 
