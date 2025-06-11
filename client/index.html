@@ -1,66 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Indian Ludo Raja 👑</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" defer></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Ludo Raja - Board</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <h1>Indian Ludo Raja 👑</h1>
+<body class="game-body">
 
-  <div id="loginPanel" class="card">
-    <input id="playerName" placeholder="Enter your name" />
-    <button onclick="login()">Start</button>
-  </div>
+  <div class="board-container">
+    <div class="ludo-board">
 
-  <div id="lobbyPanel" class="card hidden">
-    <h2>Lobby</h2>
-    <button onclick="quickMatch()">Quick Match ⚡</button>
-    <div class="room-box">
-      <input id="roomInput" placeholder="Room Code" />
-      <button onclick="createRoom()">Create</button>
-      <button onclick="joinRoom()">Join</button>
+      <!-- RED Home -->
+      <div class="home red-home">
+        <div class="token" id="red1"></div>
+        <div class="token" id="red2"></div>
+        <div class="token" id="red3"></div>
+        <div class="token" id="red4"></div>
+      </div>
+
+      <!-- GREEN Home -->
+      <div class="home green-home">
+        <div class="token" id="green1"></div>
+        <div class="token" id="green2"></div>
+        <div class="token" id="green3"></div>
+        <div class="token" id="green4"></div>
+      </div>
+
+      <!-- YELLOW Home -->
+      <div class="home yellow-home">
+        <div class="token" id="yellow1"></div>
+        <div class="token" id="yellow2"></div>
+        <div class="token" id="yellow3"></div>
+        <div class="token" id="yellow4"></div>
+      </div>
+
+      <!-- BLUE Home -->
+      <div class="home blue-home">
+        <div class="token" id="blue1"></div>
+        <div class="token" id="blue2"></div>
+        <div class="token" id="blue3"></div>
+        <div class="token" id="blue4"></div>
+      </div>
+
+      <!-- Center Dice + Turn -->
+      <div class="center-area">
+        <p id="current-turn">🔁 Turn: Red</p>
+        <div id="dice" onclick="rollDice()">🎲</div>
+        <p id="dice-result">-</p>
+      </div>
+
     </div>
-    <div id="shareBox" class="hidden">
-      <p>Invite your friend:</p>
-      <input id="shareLink" readonly />
-      <button onclick="copyLink()">📋 Copy Link</button>
-    </div>
-    <p id="statusBox"></p>
   </div>
 
-  <div id="gamePanel" class="card hidden">
-    <h2 id="roomTitle"></h2>
-    <p id="turnInfo">Opponent's turn</p>
-    <button id="rollBtn" onclick="rollDice()" disabled>🎲 Roll</button>
-    <p id="diceRes"></p>
-    <p>Coins: <span id="coinCount">0</span> | Level: <span id="lvl">1</span></p>
-    <button id="startVoice" class="hidden" onclick="startVoiceChat()">🎙 Start Voice Chat</button>
-  </div>
-
-  <div id="chatPanel" class="card hidden">
-    <h3>Chat 💬</h3>
-    <div id="messages"></div>
-    <div class="chat-input">
-      <input id="msgInput" placeholder="Type a message…" />
-      <emoji-picker id="picker"></emoji-picker>
-      <button onclick="sendMsg()">➤</button>
-    </div>
-  </div>
-
-  <div id="leaderboardPanel" class="card hidden">
-    <h3>Weekly Leaderboard 🏅</h3>
-    <ol id="weeklyBoard"></ol>
-    <h3>Monthly Leaderboard 🏆</h3>
-    <ol id="monthlyBoard"></ol>
-    <h3>Yearly Leaderboard 👑</h3>
-    <ol id="yearlyBoard"></ol>
-  </div>
-
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
