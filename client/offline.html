@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Offline Mode - Indian Ludo Raja</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="game-body">
+
+  <div class="board-container">
+    <div class="ludo-board">
+      <div class="home red-home">
+        <div class="token" id="red1" onclick="moveToken('red', 1)"></div>
+        <div class="token" id="red2" onclick="moveToken('red', 2)"></div>
+        <div class="token" id="red3" onclick="moveToken('red', 3)"></div>
+        <div class="token" id="red4" onclick="moveToken('red', 4)"></div>
+      </div>
+      <div class="home green-home">
+        <div class="token" id="green1" onclick="moveToken('green', 1)"></div>
+        <div class="token" id="green2" onclick="moveToken('green', 2)"></div>
+        <div class="token" id="green3" onclick="moveToken('green', 3)"></div>
+        <div class="token" id="green4" onclick="moveToken('green', 4)"></div>
+      </div>
+      <div class="home yellow-home">
+        <div class="token" id="yellow1" onclick="moveToken('yellow', 1)"></div>
+        <div class="token" id="yellow2" onclick="moveToken('yellow', 2)"></div>
+        <div class="token" id="yellow3" onclick="moveToken('yellow', 3)"></div>
+        <div class="token" id="yellow4" onclick="moveToken('yellow', 4)"></div>
+      </div>
+      <div class="home blue-home">
+        <div class="token" id="blue1" onclick="moveToken('blue', 1)"></div>
+        <div class="token" id="blue2" onclick="moveToken('blue', 2)"></div>
+        <div class="token" id="blue3" onclick="moveToken('blue', 3)"></div>
+        <div class="token" id="blue4" onclick="moveToken('blue', 4)"></div>
+      </div>
+      <div class="center-area">
+        <h3>Offline Multiplayer Mode</h3>
+        <p id="current-turn">Turn: Red</p>
+        <div id="dice" onclick="rollDice()">🎲</div>
+        <p id="dice-result">-</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="offline.js"></script>
+</body>
+</html>
