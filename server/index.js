@@ -1,61 +1,133 @@
-const express=require("express"),cors=require("cors"),
-      http=require("http"),{Server}=require("socket.io");
+const express = require('express');
+const http = require('http');
+const cors = require('cors');
+const { Server } = require('socket.io');
 
-const app=express(); app.use(cors());
-const server=http.createServer(app);
-const io=new Server(server,{cors:{origin:"*"}});
-const START={red:0,yellow:13,green:26,blue:39}, HOME=57;
+const app = express();
+app.use(cors());
 
-const rooms={};
-function newGame(){
-  const t={}; ["red","yellow","green","blue"].forEach(c=>t[c]=Array(4).fill(-1));
-  return {players:[],turn:"red",dice:0,tokens:t,winner:null};
-}
-
-io.on("connection",sock=>{
-  sock.on("createRoom",id=>{
-    rooms[id]=newGame(); rooms[id].players.push({id:sock.id,color:"red"});
-    sock.join(id); sock.emit("roomJoined",{color:"red",msg:`Room ${id} created.`});
-  });
-
-  sock.on("joinRoom",id=>{
-    const g=rooms[id]; if(!g||g.players.length>=4) return;
-    const used=g.players.map(p=>p.color);
-    const col=["yellow","green","blue"].find(c=>!used.includes(c));
-    g.players.push({id:sock.id,color:col}); sock.join(id);
-    if(g.players.length>=2) io.to(id).emit("gameStart",g);
-  });
-
-  sock.on("roll",id=>{
-    const g=rooms[id]; if(!g||g.winner) return;
-    g.dice=Math.ceil(Math.random()*6);
-    io.to(id).emit("state",g);
-  });
-
-  sock.on("move",({roomId:id,color,idx})=>{
-    const g=rooms[id]; if(!g||g.turn!==color) return;
-    let pos=g.tokens[color][idx];
-    pos = pos===-1 ? START[color] : Math.min(pos+g.dice,HOME);
-    g.tokens[color][idx]=pos; g.dice=0;
-    if(pos===HOME && g.tokens[color].every(p=>p===HOME)) g.winner=color;
-    if(g.dice!==6) g.turn=nextColor(g.turn,g);
-    io.to(id).emit("state",g);
-  });
-
-  sock.on("reset",id=>{ if(rooms[id]) rooms[id]=newGame(); io.to(id).emit("gameStart",rooms[id]); });
-
-  sock.on("disconnect",()=>{ for(const [id,g] of Object.entries(rooms)){
-    g.players=g.players.filter(p=>p.id!==sock.id);
-    if(g.players.length===0) delete rooms[id];
-  }});
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
 });
 
-function nextColor(c,g){
-  const order=["red","yellow","green","blue"];
-  let i=(order.indexOf(c)+1)%4;
-  while(!g.players.find(p=>p.color===order[i])) i=(i+1)%4;
-  return order[i];
+let users = {};        // socket.id => name
+let rooms = {};        // room => [name1, name2]
+let userRoom = {};     // socket.id => room
+let coins = {};        // name => coin count
+
+// Login handler
+io.on('connection', (socket) => {
+  console.log('User connected:', socket.id);
+
+  socket.on('login', (name) => {
+    users[socket.id] = name;
+    coins[name] = coins[name] || 0;
+  });
+
+  // Room creation
+  socket.on('create', (room) => {
+    const name = users[socket.id];
+    socket.join(room);
+    rooms[room] = [name];
+    userRoom[socket.id] = room;
+  });
+
+  // Join room
+  socket.on('join', (room) => {
+    const name = users[socket.id];
+    if (!rooms[room]) rooms[room] = [];
+    if (rooms[room].length >= 2) return;
+    rooms[room].push(name);
+    socket.join(room);
+    userRoom[socket.id] = room;
+
+    if (rooms[room].length === 2) {
+      const turn = rooms[room][Math.floor(Math.random() * 2)];
+      io.to(room).emit('roomReady', { room, turn });
+    }
+  });
+
+  // Quick Match
+  socket.on('quick', () => {
+    const name = users[socket.id];
+    let joined = false;
+
+    for (let r in rooms) {
+      if (rooms[r].length === 1) {
+        rooms[r].push(name);
+        socket.join(r);
+        userRoom[socket.id] = r;
+        const turn = rooms[r][Math.floor(Math.random() * 2)];
+        io.to(r).emit('roomReady', { room: r, turn });
+        joined = true;
+        break;
+      }
+    }
+
+    if (!joined) {
+      const room = Math.random().toString().slice(2, 8);
+      rooms[room] = [name];
+      socket.join(room);
+      userRoom[socket.id] = room;
+    }
+  });
+
+  // Dice roll
+  socket.on('roll', (data) => {
+    const name = users[socket.id];
+    coins[name] += Math.ceil(Math.random() * 10);
+    io.to(data.room).emit('rollRes', data.v);
+    socket.emit('reward', coins[name]);
+  });
+
+  // Chat
+  socket.on('chat', (data) => {
+    const name = users[socket.id];
+    io.to(data.room).emit('chat', { sender: name, text: data.text });
+  });
+
+  // Leaderboard
+  socket.on('getBoards', () => {
+    const weekly = topPlayers();
+    const monthly = topPlayers(); // Dummy data for now
+    const yearly = topPlayers();  // Dummy data for now
+    socket.emit('boards', { weekly, monthly, yearly });
+  });
+
+  // Voice Chat: WebRTC Signaling
+  socket.on('voice-offer', (data) => {
+    socket.to(data.room).emit('voice-offer', data);
+  });
+
+  socket.on('voice-answer', (data) => {
+    socket.to(data.room).emit('voice-answer', data.answer);
+  });
+
+  // Disconnect cleanup
+  socket.on('disconnect', () => {
+    const name = users[socket.id];
+    const room = userRoom[socket.id];
+    if (room && rooms[room]) {
+      rooms[room] = rooms[room].filter(n => n !== name);
+      if (rooms[room].length === 0) delete rooms[room];
+    }
+    delete users[socket.id];
+    delete userRoom[socket.id];
+  });
+});
+
+// Simple leaderboard logic
+function topPlayers() {
+  return Object.entries(coins)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([name, c]) => ({ name, coins: c }));
 }
-server.listen(process.env.PORT||3000,()=>console.log("Server on 3000"));
 
-
+// Start server
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
