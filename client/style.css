@@ -126,4 +126,22 @@
   font-size: 18px;
   font-weight: bold;
 }
+.tokens-area {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.token {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: transform 0.5s ease;
+  cursor: pointer;
+}
+.red { background: red; }
+.green { background: green; }
+.blue { background: blue; }
+.yellow { background: gold; }
+
 
