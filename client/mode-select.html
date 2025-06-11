@@ -1,0 +1,41 @@
+<!-- client/mode-select.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Indian Ludo Raja - Select Mode</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="mode-select-body">
+  <div class="mode-container">
+    <h1>🎲 Indian Ludo Raja 🎲</h1>
+    <p>Select Game Mode</p>
+
+    <div class="mode-buttons">
+      <button onclick="startPublic()">🌐 Play Online (Public Match)</button>
+      <button onclick="startPrivate()">🔒 Private Room with Friends</button>
+      <button onclick="startComputer()">🤖 Vs Computer</button>
+      <button onclick="startOffline()">👨‍👩‍👧‍👦 Offline Multiplayer</button>
+    </div>
+  </div>
+
+  <script>
+    function startPublic() {
+      window.location.href = "online.html"; // will be created in Step 5
+    }
+
+    function startPrivate() {
+      window.location.href = "private.html"; // will be created in Step 5
+    }
+
+    function startComputer() {
+      window.location.href = "vs-computer.html"; // will be created in Step 4
+    }
+
+    function startOffline() {
+      window.location.href = "offline.html"; // will be created in Step 3
+    }
+  </script>
+</body>
+</html>
