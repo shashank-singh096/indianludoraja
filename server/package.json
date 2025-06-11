@@ -1,8 +1,8 @@
 {
   "name": "indianludoraja-server",
   "version": "1.0.0",
-  "type": "commonjs",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node index.js"
   },
