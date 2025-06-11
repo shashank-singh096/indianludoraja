@@ -1,22 +1,19 @@
-console.log("IndianLudoRaja frontend loaded");
-
 const socket = io("https://indianludoraja.onrender.com");
 
 function createRoom() {
-  const room = prompt("Enter Room Name:");
-  if (room) {
-    socket.emit("createRoom", room);
-  }
+  const roomId = document.getElementById("roomInput").value;
+  socket.emit("createRoom", roomId);
 }
 
 function joinRoom() {
-  const room = prompt("Enter Room Name to Join:");
-  if (room) {
-    socket.emit("joinRoom", room);
-  }
+  const roomId = document.getElementById("roomInput").value;
+  socket.emit("joinRoom", roomId);
 }
 
-socket.on("message", (msg) => {
-  console.log("Server:", msg);
-  document.getElementById("game").innerHTML = `<p>${msg}</p>`;
+socket.on("roomJoined", (roomId) => {
+  document.getElementById("status").innerText = `Joined Room '${roomId}'`;
+});
+
+socket.on("gameStart", (roomId) => {
+  document.getElementById("status").innerText = `Both players joined Room '${roomId}'. Game will start!`;
 });
