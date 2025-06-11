@@ -3,31 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Indian Ludo Raja</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>Indian Ludo Raja 👑</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Indian Ludo Raja 👑</h1>
+  <h1>Indian Ludo Raja 👑</h1>
 
-  <section id="lobby">
-    <input id="room" placeholder="Room ID"/>
-    <button onclick="createRoom()">Create</button>
-    <button onclick="joinRoom()">Join</button>
-    <p id="lobbyMsg"></p>
-  </section>
-
-  <section id="game" class="hide">
-    <canvas id="board" width="640" height="640"></canvas>
-    <div id="ui">
-      <div id="info"></div>
-      <button id="diceBtn" onclick="rollDice()">🎲 Roll</button>
-      <span id="diceVal"></span>
-      <button id="againBtn" class="hide" onclick="playAgain()">Play Again</button>
+  <div class="container">
+    <div>
+      <input type="text" id="roomInput" placeholder="Enter Room Code" />
     </div>
-  </section>
+    <div>
+      <button onclick="createRoom()">Create Room</button>
+      <button onclick="joinRoom()">Join Room</button>
+    </div>
+    <div class="message-box" id="messageBox">Welcome to Indian Ludo Raja<br>Game is loading...</div>
+    
+    <div class="rolling-area" id="gameArea" style="display:none;">
+      <p id="turnMsg">Opponent's turn</p>
+      <button onclick="rollDice()">🎲 Roll</button>
+      <div class="dice-roll" id="diceValue"></div>
+    </div>
+  </div>
 
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <div class="footer">© 2025 Indian Ludo Raja. Built with ❤️ by Shashank Singh.</div>
+
   <script src="script.js"></script>
 </body>
 </html>
-
