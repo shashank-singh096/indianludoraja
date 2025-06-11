@@ -1,54 +1,50 @@
-body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: #ffe0b2;
+/* Add to client/style.css */
+.mode-select-body {
   margin: 0;
   padding: 0;
-}
-
-h1 {
-  background: #ff6f00;
-  color: white;
-  margin: 0;
-  padding: 1rem;
-}
-
-.card {
-  background: white;
-  margin: 2rem auto;
-  padding: 1rem;
-  max-width: 400px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.hidden {
-  display: none;
-}
-
-.chat-input {
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(circle, #ffdfc4, #ffae7b);
+  height: 100vh;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 5px;
-  margin-top: 10px;
 }
 
-input {
-  padding: 8px;
-  width: 70%;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+.mode-container {
+  text-align: center;
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 400px;
 }
 
-button {
-  padding: 8px 10px;
+.mode-container h1 {
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  color: #ff6600;
+}
+
+.mode-container p {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.mode-buttons button {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 1rem;
+  font-size: 1rem;
   border: none;
-  border-radius: 5px;
-  background: #ff9800;
+  border-radius: 12px;
+  background-color: #007bff;
   color: white;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-button:disabled {
-  background: #ccc;
+.mode-buttons button:hover {
+  background-color: #0056b3;
 }
