@@ -1,65 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Indian Ludo Raja - Board</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Ludo Raja</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="game-body">
+<body>
+    <div class="game-container">
+        <div class="game-board-area">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Ludo_board.svg/1024px-Ludo_board.svg.png" alt="Ludo Board" class="ludo-board-image">
 
-  <div class="board-container">
-    <div class="ludo-board">
+            <div class="tokens-container">
+                <div class="token red" id="red_token_1" data-player="red"></div>
+                <div class="token red" id="red_token_2" data-player="red"></div>
+                <div class="token red" id="red_token_3" data-player="red"></div>
+                <div class="token red" id="red_token_4" data-player="red"></div>
 
-      <!-- RED Home -->
-      <div class="home red-home">
-        <div class="token" id="red1"></div>
-        <div class="token" id="red2"></div>
-        <div class="token" id="red3"></div>
-        <div class="token" id="red4"></div>
-      </div>
+                <div class="token green" id="green_token_1" data-player="green"></div>
+                <div class="token green" id="green_token_2" data-player="green"></div>
+                <div class="token green" id="green_token_3" data-player="green"></div>
+                <div class="token green" id="green_token_4" data-player="green"></div>
 
-      <!-- GREEN Home -->
-      <div class="home green-home">
-        <div class="token" id="green1"></div>
-        <div class="token" id="green2"></div>
-        <div class="token" id="green3"></div>
-        <div class="token" id="green4"></div>
-      </div>
+                <div class="token blue" id="blue_token_1" data-player="blue"></div>
+                <div class="token blue" id="blue_token_2" data-player="blue"></div>
+                <div class="token blue" id="blue_token_3" data-player="blue"></div>
+                <div class="token blue" id="blue_token_4" data-player="blue"></div>
 
-      <!-- YELLOW Home -->
-      <div class="home yellow-home">
-        <div class="token" id="yellow1"></div>
-        <div class="token" id="yellow2"></div>
-        <div class="token" id="yellow3"></div>
-        <div class="token" id="yellow4"></div>
-      </div>
+                <div class="token yellow" id="yellow_token_1" data-player="yellow"></div>
+                <div class="token yellow" id="yellow_token_2" data-player="yellow"></div>
+                <div class="token yellow" id="yellow_token_3" data-player="yellow"></div>
+                <div class="token yellow" id="yellow_token_4" data-player="yellow"></div>
+            </div>
+        </div>
 
-      <!-- BLUE Home -->
-      <div class="home blue-home">
-        <div class="token" id="blue1"></div>
-        <div class="token" id="blue2"></div>
-        <div class="token" id="blue3"></div>
-        <div class="token" id="blue4"></div>
-      </div>
+        <div class="game-info">
+            <h2>Indian Ludo Raja</h2>
+            <div class="room-controls">
+                <input type="text" id="roomInput" placeholder="Enter Room ID">
+                <button onclick="joinGameRoom()">Join Room</button>
+                <button onclick="createGameRoom()">Create New Room</button>
+            </div>
+            <p id="room-id-display">Room ID: N/A</p>
+            <p id="playersList">Players: 0</p>
+            <p id="current-turn">⏳ Waiting for players...</p>
+            
+            <div class="dice-area">
+                <button id="rollDiceBtn" onclick="rollDice()">Roll Dice</button>
+                <p id="dice-result">🎲 -</p>
+            </div>
 
-      <!-- Center Dice + Turn -->
-      <div class="center-area">
-        <p id="current-turn">🔁 Turn: Red</p>
-        <div id="dice" onclick="rollDice()">🎲</div>
-        <p id="dice-result">-</p>
-      </div>
-<!-- Add this inside body, under <div class="center-area"> -->
-<div class="tokens-area">
-  <div class="token red" id="red1" onclick="sendMove('red1')"></div>
-  <div class="token green" id="green1" onclick="sendMove('green1')"></div>
-  <div class="token blue" id="blue1" onclick="sendMove('blue1')"></div>
-  <div class="token yellow" id="yellow1" onclick="sendMove('yellow1')"></div>
-</div>
+            <div class="actions-area">
+                <p>Click a token to move</p>
+            </div>
 
+            <div class="voice-chat-area">
+                <h3>Voice Chat</h3>
+                <button id="toggleMicBtn" disabled>🎤 Mute Mic</button>
+                <div id="voiceStatus"></div>
+                <div id="remoteAudioContainer">
+                    </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="multiplayer.js"></script>
+    <script src="voice.js"></script> 
 </body>
 </html>
