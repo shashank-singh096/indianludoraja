@@ -1,147 +1,262 @@
-/* Add to client/style.css */
-.mode-select-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: radial-gradient(circle, #ffdfc4, #ffae7b);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #a18cd1, #fbc2eb);
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #333;
 }
 
-.mode-container {
-  text-align: center;
-  background: white;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
-  width: 90%;
-  max-width: 400px;
+.game-container {
+    display: flex;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    width: 95%;
+    max-width: 1200px;
 }
 
-.mode-container h1 {
-  margin-bottom: 0.5rem;
-  font-size: 2rem;
-  color: #ff6600;
+.game-board-area {
+    flex: 3;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f8ff;
+    position: relative;
+    aspect-ratio: 1/1;
+    max-width: 650px;
+    width: 100%;
+    overflow: hidden;
 }
 
-.mode-container p {
-  margin-bottom: 1.5rem;
-  color: #333;
+.ludo-board-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
 
-.mode-buttons button {
-  display: block;
-  width: 100%;
-  margin: 0.5rem 0;
-  padding: 1rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 12px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.mode-buttons button:hover {
-  background-color: #0056b3;
-}
-.game-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #f2f2f2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.board-container {
-  width: 90vmin;
-  height: 90vmin;
-  display: grid;
-  grid-template-areas:
-    "red red center green green"
-    "red red center green green"
-    "center center center center center"
-    "yellow yellow center blue blue"
-    "yellow yellow center blue blue";
-  gap: 5px;
-}
-
-.ludo-board {
-  display: contents;
-}
-
-.home {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px;
-  border-radius: 12px;
+.tokens-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
 }
 
 .token {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background-color: white;
-  border: 3px solid black;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    transition: transform 0.4s ease-in-out, background-color 0.3s ease;
+    cursor: pointer;
+    border: 2px solid rgba(0,0,0,0.3);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    position: absolute;
+    transform: translate(-50%, -50%);
 }
 
-.red-home    { grid-area: red;    background: #f66; }
-.green-home  { grid-area: green;  background: #6f6; }
-.yellow-home { grid-area: yellow; background: #ff6; }
-.blue-home   { grid-area: blue;   background: #66f; }
+.red { background: #e74c3c; }
+.green { background: #2ecc71; }
+.blue { background: #3498db; }
+.yellow { background: #f1c40f; }
 
-.center-area {
-  grid-area: center;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+.token.selected {
+    border: 4px solid #333;
+    transform: scale(1.15) translate(-50%, -50%);
+    z-index: 10;
 }
 
-#dice {
-  font-size: 40px;
-  cursor: pointer;
-  margin: 10px 0;
-  transition: transform 0.3s ease;
+.game-info {
+    flex: 1;
+    padding: 30px;
+    background-color: #fcfcfc;
+    border-left: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
 }
 
-#dice:hover {
-  transform: scale(1.1);
+.game-info h2 {
+    color: #4a4a4a;
+    margin-top: 0;
+    margin-bottom: 20px;
 }
 
-#current-turn, #dice-result {
-  font-size: 18px;
-  font-weight: bold;
+.room-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
 }
-.tokens-area {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-.token {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  transition: transform 0.5s ease;
-  cursor: pointer;
-}
-.red { background: red; }
-.green { background: green; }
-.blue { background: blue; }
-.yellow { background: gold; }
 
+.room-controls input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 150px;
+}
 
+.room-controls button {
+    padding: 10px 15px;
+    font-size: 1em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.room-controls button:hover {
+    background-color: #0056b3;
+}
+
+#room-id-display, #playersList, #current-turn {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #555;
+    text-align: center;
+    width: 100%;
+}
+
+#current-turn {
+    font-size: 1.4em;
+    color: #34495e;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+}
+
+.dice-area {
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.dice-area button {
+    padding: 12px 25px;
+    font-size: 1.2em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.dice-area button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.dice-area button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#dice-result {
+    font-size: 2.5em;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 10px 20px;
+    display: inline-block;
+    min-width: 80px;
+}
+
+.actions-area {
+    margin-top: auto;
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    width: 100%;
+    color: #777;
+}
+
+/* Voice Chat Styles */
+.voice-chat-area {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    width: 100%;
+    text-align: center;
+}
+
+.voice-chat-area h3 {
+    color: #4a4a4a;
+    margin-bottom: 15px;
+}
+
+#toggleMicBtn {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #dc3545; /* Red for Mute */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#toggleMicBtn:hover {
+    background-color: #c82333;
+}
+
+#toggleMicBtn.unmuted {
+    background-color: #28a745; /* Green for Unmuted */
+}
+
+#toggleMicBtn.unmuted:hover {
+    background-color: #218838;
+}
+
+#toggleMicBtn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#voiceStatus {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+#remoteAudioContainer {
+    margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+        width: 100%;
+        margin: 10px;
+    }
+    .game-board-area, .game-info {
+        width: 100%;
+        max-width: unset;
+        padding: 15px;
+    }
+    .game-info {
+        border-left: none;
+        border-top: 1px solid #eee;
+    }
+}
