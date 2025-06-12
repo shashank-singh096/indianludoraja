@@ -5,67 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Indian Ludo Raja</title>
     <link rel="stylesheet" href="style.css">
-</head>
+    </head>
 <body>
-    <div class="game-container">
-        <div class="game-board-area">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Ludo_board.svg/1024px-Ludo_board.svg.png" alt="Ludo Board" class="ludo-board-image">
+    <div class="game-wrapper">
+        <div class="game-container">
+            <div class="game-board-area">
+                <img src="assets/board.png" alt="Ludo Board" class="ludo-board-image">
+                <div class="tokens-container">
+                    </div>
+            </div>
 
-            <div class="tokens-container">
-                <div class="token red" id="red_token_1" data-player="red"></div>
-                <div class="token red" id="red_token_2" data-player="red"></div>
-                <div class="token red" id="red_token_3" data-player="red"></div>
-                <div class="token red" id="red_token_4" data-player="red"></div>
+            <div class="game-info">
+                <h2>Indian Ludo Raja</h2>
+                
+                <div class="profile-area">
+                    <img id="profileAvatar" src="assets/default_avatar.png" alt="Avatar">
+                    <span id="profileName">Loading Profile...</span>
+                    <button id="loginBtn">Login</button>
+                    <button id="logoutBtn" style="display:none;">Logout</button>
+                    <p>Coins: <span id="playerCoins">0</span> | XP: <span id="playerXP">0</span> | Level: <span id="playerLevel">1</span></p>
+                </div>
+                <hr>
 
-                <div class="token green" id="green_token_1" data-player="green"></div>
-                <div class="token green" id="green_token_2" data-player="green"></div>
-                <div class="token green" id="green_token_3" data-player="green"></div>
-                <div class="token green" id="green_token_4" data-player="green"></div>
+                <div class="room-controls">
+                    <input type="text" id="roomInput" placeholder="Enter Room ID">
+                    <button onclick="ui.joinGameRoom()">Join Room</button>
+                    <button onclick="ui.createGameRoom()">Create New Room</button>
+                    <button onclick="ui.leaveGameRoom()">Leave Room</button>
+                </div>
+                <p id="roomIdDisplay">Room ID: N/A</p>
+                <p id="playersList">Players: 0</p>
+                <p id="currentTurn">⏳ Waiting for players...</p>
+                <hr>
 
-                <div class="token blue" id="blue_token_1" data-player="blue"></div>
-                <div class="token blue" id="blue_token_2" data-player="blue"></div>
-                <div class="token blue" id="blue_token_3" data-player="blue"></div>
-                <div class="token blue" id="blue_token_4" data-player="blue"></div>
+                <div class="dice-area">
+                    <button id="rollDiceBtn" onclick="gameEngine.rollDice()">Roll Dice</button>
+                    <p id="diceResult">🎲 -</p>
+                </div>
+                <div class="actions-area">
+                    <p>Click a token to move</p>
+                </div>
+                <hr>
 
-                <div class="token yellow" id="yellow_token_1" data-player="yellow"></div>
-                <div class="token yellow" id="yellow_token_2" data-player="yellow"></div>
-                <div class="token yellow" id="yellow_token_3" data-player="yellow"></div>
-                <div class="token yellow" id="yellow_token_4" data-player="yellow"></div>
+                <div class="voice-chat-area">
+                    <h3>Voice Chat</h3>
+                    <button id="toggleMicBtn" disabled>🎤 Mute Mic</button>
+                    <div id="voiceStatus"></div>
+                    <div id="remoteAudioContainer"></div>
+                </div>
+                <hr>
+
+                <div class="text-chat-area">
+                    <h3>Text Chat</h3>
+                    <div id="chatMessages"></div>
+                    <input type="text" id="chatInput" placeholder="Type a message...">
+                    <button id="sendChatBtn">Send</button>
+                </div>
             </div>
         </div>
 
-        <div class="game-info">
-            <h2>Indian Ludo Raja</h2>
-            <div class="room-controls">
-                <input type="text" id="roomInput" placeholder="Enter Room ID">
-                <button onclick="joinGameRoom()">Join Room</button>
-                <button onclick="createGameRoom()">Create New Room</button>
+        <div class="leaderboard-container">
+            <h3>Leaderboard</h3>
+            <div class="leaderboard-tabs">
+                <button onclick="leaderboard.loadLeaderboard('allTime')">All Time</button>
+                <button onclick="leaderboard.loadLeaderboard('monthly')">Monthly</button>
+                <button onclick="leaderboard.loadLeaderboard('weekly')">Weekly</button>
             </div>
-            <p id="room-id-display">Room ID: N/A</p>
-            <p id="playersList">Players: 0</p>
-            <p id="current-turn">⏳ Waiting for players...</p>
-            
-            <div class="dice-area">
-                <button id="rollDiceBtn" onclick="rollDice()">Roll Dice</button>
-                <p id="dice-result">🎲 -</p>
-            </div>
-
-            <div class="actions-area">
-                <p>Click a token to move</p>
-            </div>
-
-            <div class="voice-chat-area">
-                <h3>Voice Chat</h3>
-                <button id="toggleMicBtn" disabled>🎤 Mute Mic</button>
-                <div id="voiceStatus"></div>
-                <div id="remoteAudioContainer">
-                    </div>
-            </div>
+            <table id="leaderboardTable">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Wins</th>
+                        <th>XP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
         </div>
     </div>
 
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script src="multiplayer.js"></script>
-    <script src="voice.js"></script> 
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="firebase/firebase-config.js"></script> <script src="multiplayer.js"></script>
+    <script src="gameengine.js"></script>
+    <script src="ui.js"></script>
+    <script src="voice.js"></script>
+    <script src="chat.js"></script>
+    <script src="economy.js"></script>
+    <script src="profile.js"></script>
+    <script src="leaderboard.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // सुनिश्चित करें कि सभी मॉड्यूल लोड हो गए हैं
+            // और अब उन्हें इनिशियलाइज़ करें
+            multiplayer.init();
+            profile.init(); // प्रोफ़ाइल सिस्टम को इनिशियलाइज़ करें (लॉगिन स्थिति की जाँच करें)
+            leaderboard.loadLeaderboard('allTime'); // पेज लोड पर लीडरबोर्ड लोड करें
+            // अन्य इनिशियलाइज़ेशन
+        });
+    </script>
 </body>
 </html>
