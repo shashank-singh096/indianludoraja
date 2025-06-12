@@ -1,17 +1,23 @@
 {
   "name": "indianludoraja-server",
   "version": "1.0.0",
-  "description": "Backend for Indian Ludo Raja game",
+  "description": "Backend for Indian Ludo Raja game with advanced features",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "keywords": ["ludo", "multiplayer", "socket.io", "game"],
+  "keywords": ["ludo", "multiplayer", "socket.io", "game", "webrtc", "firebase"],
   "author": "Your Name",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "firebase-admin": "^12.1.0" // Firebase के लिए, यदि उपयोग कर रहे हैं
+    // अन्य डेटाबेस के लिए जैसे 'mongoose' (MongoDB के लिए) यहाँ जोड़ें
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
