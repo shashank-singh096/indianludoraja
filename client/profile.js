@@ -1,4 +1,3 @@
-// client/profile.js
 const loginBtn = document.getElementById('loginBtn');
 const logoutBtn = document.getElementById('logoutBtn');
 const profileAvatar = document.getElementById('profileAvatar');
@@ -9,20 +8,20 @@ let currentProfileData = {};
 
 const profile = {
     init: () => {
-        // Firebase Auth Listener
         firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
                 currentUserID = user.uid;
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'inline-block';
-                // सर्वर से प्रोफ़ाइल डेटा का अनुरोध करें
-                multiplayer.requestProfile(user.uid);
+                // ✅ Firebase Firestore से डेटा लाओ
+                const data = await profile.loadFirebaseProfile(user.uid);
+                profile.updateUI(data);
             } else {
                 currentUserID = null;
                 currentProfileData = {};
                 loginBtn.style.display = 'inline-block';
                 logoutBtn.style.display = 'none';
-                profile.updateUI({}); // UI को रीसेट करें
+                profile.updateUI({});
                 ui.showAlert("Logged out. Game progress will not be saved.");
             }
         });
@@ -51,16 +50,62 @@ const profile = {
 
     updateUI: (profileData) => {
         currentProfileData = profileData;
-        ui.updateProfileUI(profileData); // ui.js को UI अपडेट करने के लिए कहें
-        economy.updateUI(profileData); // economy.js को UI अपडेट करने के लिए कहें
+        ui.updateProfileUI(profileData);
+        economy.updateUI(profileData);
     },
 
     getProfileName: () => currentProfileData.name || `Guest_${currentUserID ? currentUserID.substring(0, 5) : 'Unknown'}`,
     getPlayerID: () => currentUserID,
-    setPlayerID: (socketID) => { // जब Socket.io कनेक्ट होता है, तो अपना ID सेट करें
-        if (!currentUserID) { // यदि Google लॉगिन नहीं है, तो Socket.id को userID के रूप में उपयोग करें
+    setPlayerID: (socketID) => {
+        if (!currentUserID) {
             currentUserID = socketID;
-            multiplayer.requestProfile(socketID); // गेस्ट प्रोफाइल लोड करें
+            multiplayer.requestProfile(socketID);
+        }
+    },
+
+    // ✅ Firestore: Profile load
+    async loadFirebaseProfile(uid) {
+        const userRef = db.collection("users").doc(uid);
+        const doc = await userRef.get();
+        if (doc.exists) {
+            return doc.data();
+        } else {
+            const newProfile = {
+                name: firebase.auth().currentUser.displayName || "Player",
+                coins: 100,
+                xp: 0,
+                level: 1,
+                wins: 0
+            };
+            await userRef.set(newProfile);
+            return newProfile;
+        }
+    },
+
+    // ✅ Firestore: XP update
+    async addXP(amount) {
+        if (!currentUserID) return;
+        const userRef = db.collection("users").doc(currentUserID);
+        const doc = await userRef.get();
+        if (doc.exists) {
+            const data = doc.data();
+            const newXP = (data.xp || 0) + amount;
+            const newLevel = Math.floor(newXP / 100) + 1;
+            await userRef.update({ xp: newXP, level: newLevel });
+            profile.updateUI({ ...data, xp: newXP, level: newLevel });
+        }
+    },
+
+    // ✅ Firestore: Coins update
+    async addCoins(amount) {
+        if (!currentUserID) return;
+        const userRef = db.collection("users").doc(currentUserID);
+        const doc = await userRef.get();
+        if (doc.exists) {
+            const data = doc.data();
+            const newCoins = (data.coins || 0) + amount;
+            await userRef.update({ coins: newCoins });
+            profile.updateUI({ ...data, coins: newCoins });
         }
     }
 };
